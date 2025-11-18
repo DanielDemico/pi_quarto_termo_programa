@@ -1,22 +1,29 @@
-FROM node:20-alpine
+# --- Stage 1: Builder ---
+FROM node:20-alpine AS builder
 
-# Set work directory
 WORKDIR /app
 
-# Copy package files
 COPY pi_front/package*.json ./
 
-# Install ALL dependencies (including devDependencies for build)
 RUN npm ci
 
-# Copy source code
 COPY pi_front/ .
 
-# Build the application
 RUN npm run build
 
-# Expose port
-EXPOSE 5173
+# --- Stage 2: Runner ---
+FROM node:20-alpine AS runner
 
-# Start the application
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5173"]
+WORKDIR /app
+
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.mjs ./next.config.mjs
+
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
