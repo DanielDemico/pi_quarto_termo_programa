@@ -4,6 +4,9 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY pi_front/package*.json ./
+COPY pi_front/tsconfig.json ./         
+COPY pi_front/tailwind.config.js ./    
+COPY pi_front/postcss.config.js ./
 
 RUN npm ci
 
