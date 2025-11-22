@@ -1,0 +1,26 @@
+.perfilContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.perfilBox{
+    width: 30%;
+}
+
+.perfilBox {
+    display: flex;
+}
+
+.nomeConfig {
+    display: flex;
+}
+
+.nomeConfig img{
+    height: 52%;
+    margin-top: 1.2vh;
+}
+
+.bioBox {
+    display: flex;
+    flex-direction: column;
+}

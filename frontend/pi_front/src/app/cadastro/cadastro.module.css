@@ -1,0 +1,88 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #465637;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center; 
+}
+
+.fundo {
+    background-color: #FFFFFF;
+    width: 75%;
+    border-radius: 24px;
+}
+
+.h {
+    font-weight:500;
+    font-size:9vh;
+    font-family: Montserrat, sans-serif;
+    text-align: center;
+    margin: 4.5vh;
+    font-style: italic;
+}
+
+.containerCadastro {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.infoCadastro {
+    display: grid;
+    grid-template-columns: auto 1fr; 
+    row-gap: 6vh;                   
+    column-gap: 4vh;
+}
+
+.infoCadastro label {
+    font-size: 3.5vh;
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+}
+
+.imgCC {
+    height: 56vh;
+}
+
+.nomeContainer, .senhaContainer, .emailContainer {
+    display: contents;   
+}
+
+.nomeContainer input,
+.senhaContainer input,
+.emailContainer input {
+    border: none;
+    border-bottom: 2px solid #000;
+    outline: none;
+    font-size: 2.5vh;
+    padding: 1vh 0.5vh;
+}
+
+.botaoCadastro {
+    background-color:  #7A8B6E;
+    color: white;
+    border-radius: 15px;
+    width: 24vh;
+    height: 8vh;
+    margin-bottom: 5vh;
+    font-size: 4vh;
+    cursor: pointer;
+    font-family: Montserrat, sans-serif;
+}
+
+.botaoCadastro:hover {
+    background-color: #465637;
+}
+
+.formCadastro > div:last-child {
+    display: flex;
+    justify-content: center;
+    margin-top: 4vh;
+}
