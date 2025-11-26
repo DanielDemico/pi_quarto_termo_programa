@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import { NextConfig } from "next/types";
+
+const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
 };
