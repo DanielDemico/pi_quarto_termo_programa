@@ -52,11 +52,15 @@ name = "pi-4termo"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "django" },
     { name = "django-ninja" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "django-ninja", specifier = ">=1.5.0" }]
+requires-dist = [
+    { name = "django", specifier = ">=5.2.8" },
+    { name = "django-ninja", extras = ["swagger"], specifier = ">=1.5.0" },
+]
 
 [[package]]
 name = "pydantic"
