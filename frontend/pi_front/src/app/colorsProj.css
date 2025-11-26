@@ -1,0 +1,15 @@
+:root{
+    --cor-verde-hover: #A9DB9F;
+    --cor-verde-msg: #61764B;
+    --cor-verde-msg1: rgba(97, 118, 75, 0.69);
+    --cor-verde-msg2: #61764B;
+    --cor-verde-selecionado: #A9DB9F;
+    --cor-verde-input: rgba(97, 118, 75, 0.86);
+}
+
+.btn-hover-pj:hover{background-color: var(--cor-verde-hover);}
+.msg-pj{background-color: var(--cor-verde-msg);}
+.msg-pj1{background-color: var(--cor-verde-msg1);}
+.msg-pj2{background-color: var(--cor-verde-msg2);}
+.msg-pj-leci{background-color: var(--cor-verde-selecionado);}
+.inpu-cor{background-color: var(--cor-verde-input);}

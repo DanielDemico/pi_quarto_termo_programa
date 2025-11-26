@@ -19,8 +19,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    depends_on:
-      - backend
+    # depends_on:
+    #   - backend
+    networks:
+      - app-network
+
+  socket_server:
+    build:
+      context: ./socket_server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
     networks:
       - app-network
 
