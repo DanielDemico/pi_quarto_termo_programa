@@ -37,7 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pi_sustentabilidade.apps.users'
+    'pi_sustentabilidade.apps.users',
+    'pi_sustentabilidade.apps.conversas',
+    'pi_sustentabilidade.apps.comentarios',
+    'pi_sustentabilidade.apps.mensagens_diretas',
+    'pi_sustentabilidade.apps.posts',
+    'pi_sustentabilidade.apps.imagens_posts'
+
+
+
+
+
 ]
 
 MIDDLEWARE = [
@@ -123,3 +133,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # Adicione esta linha
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        BASE_DIR/'static',
+    ]

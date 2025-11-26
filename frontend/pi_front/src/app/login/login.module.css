@@ -1,0 +1,87 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #465637;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center; 
+}
+
+
+.fundo {
+    background-color: #FFFFFF;
+    width: 75%;
+    border-radius: 24px;
+}
+
+.h {
+    font-weight:500;
+    font-size:9vh;
+    font-family: Montserrat, sans-serif;
+    text-align: center;
+    margin: 4.5vh;
+    font-style: italic;
+}
+
+.containerLogin {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.infoLogin {
+    gap: 12vh 5vh;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 2vh;
+}
+
+.infoLogin label {
+    font-size: 3.5vh;
+    font-family: Montserrat, sans-serif;
+    font-weight: 500;
+}
+
+.imgCC {
+    height: 56vh;
+}
+
+.nomeContainer, .senhaContainer {
+    gap: 2vh;
+    display: contents;
+}
+
+.nomeContainer input, .senhaContainer input {
+    align-items: center;
+    border: none;         
+    border-bottom: 2px solid #000; 
+    outline: none;
+}
+
+.botaoLogin {
+    background-color:  #7A8B6E;
+    color: white;
+    border-radius: 15px;
+    width: 19vh;
+    height: 7vh;
+    margin-bottom: 5vh;
+    font-size: 4vh;
+    cursor: pointer;
+    font-family: Montserrat, sans-serif;
+}
+
+.botaoLogin:hover {
+    background-color: #465637;
+}
+
+.formLogin > div:last-child {
+    display: flex;
+    justify-content: center;
+    margin-top: 4vh;
+}

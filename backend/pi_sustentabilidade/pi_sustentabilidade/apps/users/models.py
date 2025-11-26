@@ -9,3 +9,6 @@ class Users(models.Model):  # ← Herdar de models.Model
     class Meta:
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
+    
+    def __str__(self):
+        return f"{self.name} ({self.email})"

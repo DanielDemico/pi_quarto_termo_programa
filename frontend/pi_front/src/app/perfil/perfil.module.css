@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.perfilContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5vh;
+    margin : -270px;
+}
+
+.perfilBox {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+}
+
+.nomeConfig {
+    display: flex;
+}
+
+.nomeConfig h1 {
+    font-family: var(--font-montserrat);
+}
+
+.infoBox {
+    display: flex;
+    gap: 1.3vh;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bioBox {
+    display: flex;
+    flex-direction: column;
+}
+
+.contagemBox {
+    display: flex;
+    gap: 2vh;
+}
+
+.contagemBox p {
+    font-family: var(--font-open-sans);
+    font-size: small;
+}
+
+.contagemItem {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5vh;
+}
+
+.containerBtn {
+    display: flex;
+    gap: 2vh;
+}
+
+.btnPerfil, .btnMensagens {
+    font-family: var(--font-open-sans);
+    cursor: pointer;
+    color: #fff;
+    background-color: #1A4523;
+    border: none;
+    border-radius: 1vh;
+    font-size: small;
+    width: 25vh;
+    height: 4.3vh;
+    cursor: pointer;
+}
+
+.criarBox {
+    display: flex;
+    justify-content: center;
+    margin-top: 3vh;
+    background-color: #465637;
+    padding: 0.5vh;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.criarIcon {
+    padding: 0.4vh;
+    width: 6vh;
+    cursor: pointer;
+}
+
+.divisor {
+    display: flex;
+    width: 15%;
+}
+
+.criarText{
+    font-family: var(--font-open-sans);
+    font-size: smaller;
+}
+
+.imagensBox {
+    display: flex;
+    flex-direction: row;
+}
+
+.gridIcon {
+    width: 3vh;
+    margin-top: 2vh;
+}
+
+.postagensBox {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5vh;
+    width: 49%;
+    display: flex;
+    margin-bottom: 4vh;
+}
+
+.postagemImage {
+    width: 31vh;
+}
