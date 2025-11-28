@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'pi_sustentabilidade.apps.posts',
     'pi_sustentabilidade.apps.imagens_posts',
     "corsheaders",
+    'pi_sustentabilidade.apps.imagens_posts',
+    'corsheaders'
 
 
 
@@ -55,6 +57,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -144,3 +147,7 @@ if DEBUG:
     STATICFILES_DIRS = [
         BASE_DIR/'static',
     ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Next.js rodando local
+]

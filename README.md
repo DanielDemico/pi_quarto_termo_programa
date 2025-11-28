@@ -1,4 +1,6 @@
-# Incrivel PI do Quarto Termo
+# Campo Conectado - PI Quarto Termo
+## Integrantes: Daniel, Danielli, Eduardo, José Gabriel, Matheus Betelli e Sabrina.
+## Docente: Professora Doutora: Luciene Cristina Alves Rinaldi
 
 ## Estrutura
 
@@ -18,3 +20,11 @@ primeiro rode:
 
 * Frontend: http://localhost:3000
 * Backend API: http://localhost:8000
+
+## Materiais usados durante o PI:
+* Pasta "Materias"
+
+## Video da apresentação:
+* https://drive.google.com/drive/folders/1Kb2JAE8fEfRErCcjuc_iLHzCeUyukGuh?usp=sharing
+
+## O ARQUIVO DO RELATÓRIO ESTÁ DENTRO DA PASTA "Materias"

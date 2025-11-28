@@ -123,3 +123,10 @@ body {
 .postagemImage {
     width: 31vh;
 }
+
+.perfilImage {
+    border-radius: 50%;
+    width: 12vh;
+    height: 11vh;
+    margin: 3vh;
+}
