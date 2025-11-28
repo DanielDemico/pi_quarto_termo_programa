@@ -19,3 +19,6 @@ primeiro rode:
 
 * Frontend: http://localhost:3000
 * Backend API: http://localhost:8000
+
+## Video da apresentação:
+* https://drive.google.com/drive/folders/1Kb2JAE8fEfRErCcjuc_iLHzCeUyukGuh?usp=sharing
