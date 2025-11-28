@@ -21,7 +21,7 @@ primeiro rode:
 * Backend API: http://localhost:8000
 
 ## Materiais usados durante o PI:
-* Pasta "Materiais"
+* Pasta "Materias"
 
 ## Video da apresentação:
 * https://drive.google.com/drive/folders/1Kb2JAE8fEfRErCcjuc_iLHzCeUyukGuh?usp=sharing
