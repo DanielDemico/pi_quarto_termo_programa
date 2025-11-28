@@ -42,12 +42,8 @@ INSTALLED_APPS = [
     'pi_sustentabilidade.apps.comentarios',
     'pi_sustentabilidade.apps.mensagens_diretas',
     'pi_sustentabilidade.apps.posts',
-    'pi_sustentabilidade.apps.imagens_posts',
     "corsheaders",
     'pi_sustentabilidade.apps.imagens_posts',
-    'corsheaders'
-
-
 
 
 
