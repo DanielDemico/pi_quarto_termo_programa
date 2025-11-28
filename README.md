@@ -26,3 +26,5 @@ primeiro rode:
 
 ## Video da apresentação:
 * https://drive.google.com/drive/folders/1Kb2JAE8fEfRErCcjuc_iLHzCeUyukGuh?usp=sharing
+
+## O ARQUIVO DO RELATÓRIO ESTÁ DENTRO DA PASTA "Materias"
