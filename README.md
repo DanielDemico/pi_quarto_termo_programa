@@ -1,4 +1,5 @@
-# Incrivel PI do Quarto Termo
+# Campo Conectado - PI Quarto Termo
+## Integrantes: Daniel, Danielli, Eduardo, Matheus Betelli e Sabrina.
 
 ## Estrutura
 
