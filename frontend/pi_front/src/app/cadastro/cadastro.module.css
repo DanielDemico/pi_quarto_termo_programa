@@ -86,3 +86,8 @@ html, body {
     justify-content: center;
     margin-top: 4vh;
 }
+
+.entrarConta {
+    font-weight: bold;
+    font-size: large;
+}

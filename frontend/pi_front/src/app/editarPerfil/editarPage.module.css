@@ -1,0 +1,122 @@
+/* Container principal da página */
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #064e3b; /* verde escuro */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Título da página */
+.titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #064e3b;
+  text-align: center;
+}
+
+/* Formulário */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Container da foto */
+.fotoContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Preview da foto */
+.foto {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #064e3b;
+  margin-bottom: 0.5rem;
+}
+
+/* Placeholder caso não tenha foto */
+.fotoPlaceholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #e5e7eb; /* cinza claro */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280; /* texto cinza */
+  margin-bottom: 0.5rem;
+  border: 2px dashed #064e3b;
+}
+
+/* Botão de alterar foto */
+.botaoFoto {
+  background-color: #064e3b;
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.botaoFoto:hover {
+  background-color: #065f46;
+}
+
+/* Grupo de input + label */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Labels */
+.label {
+  font-weight: 600;
+  color: #064e3b;
+}
+
+/* Inputs */
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #064e3b;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  border-color: #10b981; /* verde claro */
+}
+
+/* Botão de salvar alterações */
+.botaoSalvar {
+  background-color: #064e3b;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.botaoSalvar:hover {
+  background-color: #065f46;
+}
+
+.botaoSalvar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

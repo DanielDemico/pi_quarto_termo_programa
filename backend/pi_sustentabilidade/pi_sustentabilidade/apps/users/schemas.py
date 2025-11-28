@@ -20,3 +20,6 @@ class UserUpdateSchema(Schema):
     image_url: Optional[str] = None
     password: Optional[str] = None
 
+class LoginSchema(Schema):
+    email: str
+    password: str

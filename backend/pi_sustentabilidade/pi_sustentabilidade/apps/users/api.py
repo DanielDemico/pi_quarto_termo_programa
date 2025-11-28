@@ -1,13 +1,34 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 from .models import Users
-from .schemas import UserSchema, UserCreateSchema, UserUpdateSchema
+from .schemas import UserSchema, UserCreateSchema, UserUpdateSchema, LoginSchema
 
 # Create your views here.
 from ninja import Router
 from ninja.errors import HttpError
 
 router = Router()
+
+
+# LOGIN
+@router.post("/login")
+def login(request, payload: LoginSchema):
+
+    try:
+        user = Users.objects.get(email=payload.email)
+    except Users.DoesNotExist:
+        raise HttpError(404, "Usuário não encontrado")
+
+    if not check_password(payload.password, user.password):
+        raise HttpError(401, "Senha incorreta")
+
+    return {
+        "message": "Login realizado com sucesso",
+        "user_id": user.id,
+        "name": user.name,
+        "email": user.email,
+    }
 
 # CREATE
 @router.post("/create_user", response=UserSchema)
@@ -60,5 +81,4 @@ def delete_user(request, user_id: int):
     usuario = get_object_or_404(Users, id=user_id)
     usuario.delete()
     return {"message": "Usuário deletado com sucesso", "id": user_id}
-
 
