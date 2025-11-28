@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure---c5gp#*(of)olqswj+2czk@96xpoxvsc4jht%q)0=v^#1f1+&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "backend"]
 
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'pi_sustentabilidade.apps.comentarios',
     'pi_sustentabilidade.apps.mensagens_diretas',
     'pi_sustentabilidade.apps.posts',
-    'pi_sustentabilidade.apps.imagens_posts'
+    'pi_sustentabilidade.apps.imagens_posts',
+    "corsheaders",
 
 
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,6 +112,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

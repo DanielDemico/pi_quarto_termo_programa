@@ -1,35 +1,81 @@
 "use client";
 import { Sidebar } from "@/components/ui/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiPosts, apiImagensPosts, PostApi } from "@/util/api";
 import PostCard from "@/components/Post";
 import BottomNav from "@/components/ui/BottomNav";
 import CreatePost from "@/components/createPost";
 import HeaderLogo from "@/components/ui/HeaderLogo";
 
-type NovoPost = { imagem: string; texto: string; };
+type NovoPost = { imagem: string; texto: string };
 type Post = {
   id: number;
+  id_usuario: number;
+  titulo: string;
+  conteudo: string;
   imagem?: string;
-  texto: string;
-  usuario?: string;
-  avatarUrl?: string;
-  tempo?: string;
-  localizacao?: string;
+  usuario: string;
+  avatarUrl: string;
 };
 
 export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [modalAberto, setModalAberto] = useState(false);
 
-  function adicionarPost(novo: NovoPost) {
-    setPosts([{
-      id: Date.now(),
-      ...novo,
-      usuario: "harryprescott",
-      avatarUrl: "/icons/Default.png",
-      tempo: "agora",
-      localizacao: "Localização"
-    }, ...posts]);
+    async function carregarPosts() {
+      try {
+        const data = await apiPosts.list(); // PostApi[]
+  
+        const postsComImagem = await Promise.all(
+          data.map(async (p) => {
+            const imagens = await apiImagensPosts.listByPost(p.id);
+            const primeiraImagem = Array.isArray(imagens) ? imagens[0]?.url_imagem : imagens?.url_imagem;
+        
+            return {
+              id: p.id,
+              id_usuario: p.id_usuario,
+              titulo: p.titulo,
+              conteudo: p.conteudo,
+              imagem: primeiraImagem || "/icons/Default.png",
+              usuario: p.usuario_nome,
+              avatarUrl: p.usuario_image_url || "/icons/Default.png",
+            } as Post;
+          })
+        );
+  
+        setPosts(postsComImagem);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+  useEffect(() => {
+    carregarPosts();
+  }, []);
+
+  async function adicionarPost(novo: NovoPost) {
+    if (!novo.imagem) {
+      alert("Você precisa adicionar uma foto para publicar!");
+      return;
+    }
+
+    try {
+      const createdPost = await apiPosts.create({
+        id_usuario: 1, // TODO: trocar pelo usuário logado
+        titulo: novo.texto.slice(0, 50) || "Post",
+        conteudo: novo.texto,
+      });
+
+      const createdImagem = await apiImagensPosts.create({
+        id_post: createdPost.id,
+        url_imagem: novo.imagem, // base64 vindo do CreatePost
+      });
+
+      await carregarPosts(); 
+    } catch (err) {
+      console.error("Erro ao criar post com imagem", err);
+      alert("Erro ao publicar post.");
+    }
   }
 
   return (
@@ -42,14 +88,14 @@ export default function Page() {
           <div className="w-full sm:max-w-md md:max-w-xl">
             {posts.map(post => (
               <PostCard
+                
                 key={post.id}
                 id={post.id}
+                idUsuario= {post.id_usuario}
                 imagem={post.imagem ?? "/imagem aqui"}
-                texto={post.texto}
+                texto={post.conteudo}
                 usuario={post.usuario ?? "Desconhecido"}
                 avatarUrl={post.avatarUrl ?? "/icons/Default.png"}
-                tempo={post.tempo ?? "agora"}
-                localizacao={post.localizacao ?? "Localização"}
               />
             ))}
           </div>

@@ -4,11 +4,11 @@ from datetime import datetime
 
 class ComentarioSchema(Schema):
     id: int
-    id_usuario: int
     id_post: int
-    conteudo: str
+    id_usuario: int
+    usuario_nome: str
+    texto: str
     data_criacao: datetime
-    data_atualizacao: datetime
 
 class ComentarioCreateSchema(Schema):
     id_usuario: int

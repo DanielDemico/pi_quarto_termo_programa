@@ -13,31 +13,77 @@ def create_mensagem_direta(request, payload: MensagemDiretaCreateSchema):
         mensagem = MensagemDireta.objects.create(
             id_conversa_id=payload.id_conversa,
             id_usuario_id=payload.id_usuario,
-            conteudo=payload.conteudo
+            conteudo=payload.conteudo,
         )
-        return mensagem
+        return MensagemDiretaSchema(
+            id=mensagem.id,
+            id_conversa=mensagem.id_conversa_id,
+            id_usuario=mensagem.id_usuario_id,
+            conteudo=mensagem.conteudo,
+            data_envio=mensagem.data_envio,
+            lida=mensagem.lida,
+        )
     except Exception as e:
         raise HttpError(400, f"Erro ao criar mensagem direta: {str(e)}")
 
 # READ - List all
 @router.get("/get_mensagens_diretas", response=list[MensagemDiretaSchema])
 def list_mensagens_diretas(request):
-    return MensagemDireta.objects.all()
+    msgs = MensagemDireta.objects.all()
+    return [
+        MensagemDiretaSchema(
+            id=m.id,
+            id_conversa=m.id_conversa_id,
+            id_usuario=m.id_usuario_id,
+            conteudo=m.conteudo,
+            data_envio=m.data_envio,
+            lida=m.lida,
+        )
+        for m in msgs
+    ]
 
-# READ - Get by ID
 @router.get("/{mensagem_id}", response=MensagemDiretaSchema)
 def get_mensagem_direta_by_id(request, mensagem_id: int):
-    return get_object_or_404(MensagemDireta, id=mensagem_id)
+    m = get_object_or_404(MensagemDireta, id=mensagem_id)
+    return MensagemDiretaSchema(
+        id=m.id,
+        id_conversa=m.id_conversa_id,
+        id_usuario=m.id_usuario_id,
+        conteudo=m.conteudo,
+        data_envio=m.data_envio,
+        lida=m.lida,
+    )
 
-# READ - Get mensagens by conversa
 @router.get("/conversa/{conversa_id}/mensagens", response=list[MensagemDiretaSchema])
 def get_mensagens_by_conversa(request, conversa_id: int):
-    return MensagemDireta.objects.filter(id_conversa_id=conversa_id)
+    msgs = MensagemDireta.objects.filter(id_conversa_id=conversa_id)
+    return [
+        MensagemDiretaSchema(
+            id=m.id,
+            id_conversa=m.id_conversa_id,
+            id_usuario=m.id_usuario_id,
+            conteudo=m.conteudo,
+            data_envio=m.data_envio,
+            lida=m.lida,
+        )
+        for m in msgs
+    ]
 
-# READ - Get mensagens by user
 @router.get("/user/{user_id}/mensagens", response=list[MensagemDiretaSchema])
 def get_mensagens_by_user(request, user_id: int):
-    return MensagemDireta.objects.filter(id_usuario_id=user_id)
+    msgs = MensagemDireta.objects.filter(id_usuario_id=user_id)
+    return [
+        MensagemDiretaSchema(
+            id=m.id,
+            id_conversa=m.id_conversa_id,
+            id_usuario=m.id_usuario_id,
+            conteudo=m.conteudo,
+            data_envio=m.data_envio,
+            lida=m.lida,
+        )
+        for m in msgs
+    ]
+
 
 # UPDATE
 @router.put("/{mensagem_id}", response=MensagemDiretaSchema)

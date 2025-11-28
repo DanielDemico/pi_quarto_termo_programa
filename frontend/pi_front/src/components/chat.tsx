@@ -1,40 +1,88 @@
 import { useEffect, useRef, useState } from "react";
 import socket from "../util/socket";
+import { apiMensagensDiretas } from "@/util/api";
 
 type ChatProps = {
-  contato: { nome: string; avatar: string };
-  usuarioLogado: { nome: string; avatar: string };
+  conversaId: number;
+  contato: { id: number; nome: string; avatar: string };
+  usuarioLogado: { id: number; nome: string; avatar: string };
 };
+
 type Mensagem = { texto: string; de: string; avatar?: string; imagem?: string };
 
-export default function Chat({ contato, usuarioLogado }: ChatProps) {
+type MensagemSocket = {
+  conversaId: number;
+  texto: string;
+  imagem: string | null;
+  deId: number;
+  paraId: number;
+  deNome: string;
+  avatar?: string;
+};
+
+
+export default function Chat({  conversaId, contato, usuarioLogado }: ChatProps) {
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [texto, setTexto] = useState("");
   const [imagem, setImagem] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-
-  useEffect(() => {
-    socket.on("mensagem", (msg: Mensagem) => {
-      setMensagens((msgs) => [...msgs, msg]);
-    });
-    return () => {
-      socket.off("mensagem");
-    };
-  }, []);
-
   function enviar() {
     if (texto.trim() !== "" || imagem) {
       socket.emit("mensagem", {
+        conversaId,
         texto,
         imagem,
-        de: usuarioLogado.nome, // <- Nome do usuário logado!
+        deId: usuarioLogado.id,
+        paraId: contato.id,
+        deNome: usuarioLogado.nome,
         avatar: usuarioLogado.avatar,
       });
       setTexto("");
+      setImagem(null);
     }
   }
 
+  useEffect(() => {
+    socket.emit("join", { conversaId });
+  }, [conversaId]);
+  
+  useEffect(() => {
+    async function carregarHistorico() {
+      const dados = await apiMensagensDiretas.listByConversa(conversaId);
+      setMensagens(
+        dados.map((m) => ({
+          texto: m.conteudo,
+          de: m.id_usuario === usuarioLogado.id ? usuarioLogado.nome : contato.nome,
+        }))
+      );
+    }
+    carregarHistorico();
+  }, [conversaId, usuarioLogado.id, usuarioLogado.nome, contato.nome]);
+
+
+
+  useEffect(() => {
+    function handler(msg: MensagemSocket) {
+      if (msg.conversaId !== conversaId) return; // ignora mensagens de outras conversas
+  
+      setMensagens((msgs) => [
+        ...msgs,
+        {
+          texto: msg.texto,
+          de: msg.deNome,
+          avatar: msg.avatar,
+          imagem: msg.imagem || undefined,
+        },
+      ]);
+    }
+  
+    socket.on("mensagem", handler);
+    return () => {
+      socket.off("mensagem", handler);
+    };
+  }, [conversaId]);
+  
   return (
     <div className="flex flex-col h-full">
       <div className="flex-1 overflow-y-auto px-4 py-6 mb-2 space-y-2">
@@ -99,15 +147,19 @@ export default function Chat({ contato, usuarioLogado }: ChatProps) {
           if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-              setImagem(reader.result as string);
-              // Envia imediatamente ao carregar imagem
+              const img = reader.result as string;
+            
               socket.emit("mensagem", {
-                texto: "", // sem texto, só imagem
-                imagem: reader.result as string,
-                de: usuarioLogado.nome,
-                avatar: usuarioLogado.avatar
+                conversaId,
+                texto: "",
+                imagem: img,
+                deId: usuarioLogado.id,
+                paraId: contato.id,
+                deNome: usuarioLogado.nome,
+                avatar: usuarioLogado.avatar,
               });
-              setImagem(null); // limpa imagem local
+            
+              setImagem(null);
             };
             reader.readAsDataURL(file);
           }

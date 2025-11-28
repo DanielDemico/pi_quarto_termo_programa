@@ -5,10 +5,13 @@ from datetime import datetime
 class PostSchema(Schema):
     id: int
     id_usuario: int
+    usuario_nome: str
+    usuario_image_url: str
     titulo: str
     conteudo: str
     data_criacao: datetime
     data_atualizacao: datetime
+
 
 class PostCreateSchema(Schema):
     id_usuario: int

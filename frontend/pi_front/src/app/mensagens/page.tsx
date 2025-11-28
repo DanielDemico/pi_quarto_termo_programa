@@ -4,53 +4,96 @@ import CreatePost from "@/components/createPost";
 import BottomNav from "@/components/ui/BottomNav";
 import HeaderLogo from "@/components/ui/HeaderLogo";
 import { Sidebar } from "@/components/ui/Sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { apiPosts, apiImagensPosts, PostApi, apiConversas } from "@/util/api";
 
-type Contato = { nome: string, avatar: string };
-type NovoPost = { imagem: string; texto: string; };
+type Contato = { idConversa: number; idUser: number; nome: string; avatar: string };
+
+type NovoPost = { imagem: string; texto: string };
 type Post = {
-    id: number;
-    imagem?: string;
-    texto: string;
-    usuario?: string;
-    avatarUrl?: string;
-    tempo?: string;
-    localizacao?: string;
+  id: number;
+  id_usuario: number;
+  titulo: string;
+  conteudo: string;
+  imagem?: string;
+  usuario: string;
+  avatarUrl: string;
 };
 
 export default function MensagensPage() {
-    const [contatoAtivo, setContatoAtivo] = useState<Contato | null>(null);
+    const [contatos, setContatos] = useState<Contato[]>([]);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [termoBusca, setTermoBusca] = useState("");
+    const [modalAberto, setModalAberto] = useState(false);
+    const usuarioLogadoId = 1
     const usuarios = [
         { nome: "henrylucas", avatar: "/avatars/henry.png" },
         { nome: "luanmatheus", avatar: "/avatars/luan.png" },
-    ];
+      ];
     const [usuarioAtual, setUsuarioAtual] = useState(usuarios[0]);
-    const [termoBusca, setTermoBusca] = useState("");
-
-    
-    const contatos: Contato[] = [
-        { nome: "henrylucas", avatar: "/icons/Default.png" },
-        { nome: "luanmatheus", avatar: "/icons/Default.png" },
-    ];
+    const [contatoAtivo, setContatoAtivo] = useState<Contato | null>(null);
     
     const contatosFiltrados = contatos.filter(contato =>
         contato.nome.toLowerCase().includes(termoBusca.toLowerCase())
     );
 
-    function adicionarPost(novo: NovoPost) {
-        setPosts([{
-            id: Date.now(),
-            ...novo,
-            usuario: "harryprescott",
-            avatarUrl: "/avatar-harry.png",
-            tempo: "agora",
-            localizacao: "Localização"
-        }, ...posts]);
-    }
-    const [modalAberto, setModalAberto] = useState(false);
+    async function adicionarPost(novo: NovoPost) {
+        if (!novo.imagem) {
+          alert("Você precisa adicionar uma foto para publicar!");
+          return;
+        }
+    
+        try {
+          const createdPost = await apiPosts.create({
+            id_usuario: 1, // TODO: trocar pelo usuário logado
+            titulo: novo.texto.slice(0, 50) || "Post",
+            conteudo: novo.texto,
+          });
+    
+          const createdImagem = await apiImagensPosts.create({
+            id_post: createdPost.id,
+            url_imagem: novo.imagem, // base64 vindo do CreatePost
+          });
+    
+          const postFormatado: Post = {
+            id: createdPost.id,
+            id_usuario: createdPost.id_usuario,
+            titulo: createdPost.titulo,
+            conteudo: createdPost.conteudo,
+            imagem: createdImagem.url_imagem,
+            usuario: createdPost.usuario_nome,
+            avatarUrl: createdPost.usuario_image_url || "/icons/Default.png",
+          };
+    
+          setPosts((prev) => [postFormatado, ...prev]);
+        } catch (err) {
+          console.error("Erro ao criar post com imagem", err);
+          alert("Erro ao publicar post.");
+        }
+      }
 
 
+    useEffect(() => {
+        async function carregarContatos() {
+          const conversas = await apiConversas.listByUser(usuarioLogadoId);
+          const lista: Contato[] = conversas.map(c => {
+            const souUsuario1 = c.id_usuario1 === usuarioLogadoId;
+            const outroNome = souUsuario1 ? c.usuario2_nome : c.usuario1_nome;
+            const outroAvatar = souUsuario1 ? c.usuario2_image_url : c.usuario1_image_url;
+            const outroId = souUsuario1 ? c.id_usuario2 : c.id_usuario1;
+      
+            return {
+              idConversa: c.id,
+              idUser: outroId,
+              nome: outroNome,
+              avatar: outroAvatar || "/icons/Default.png",
+            };
+          });
+          setContatos(lista);
+          if (!contatoAtivo && lista.length > 0) setContatoAtivo(lista[0]);
+        }
+        carregarContatos();
+      }, [usuarioLogadoId]);
 
     return (
         <>
@@ -108,27 +151,7 @@ export default function MensagensPage() {
                     <div className="flex-1 flex flex-col h-full bg-gray-50">
                         {contatoAtivo ? (
                             <div className="flex flex-col h-full">
-                                <div className="flex items-center gap-2 mb-4 px-6">
-                                    <label className="font-semibold text-emerald-900">Usuário logado:</label>
-                                    <select
-                                        value={usuarioAtual.nome}
-                                        onChange={e => {
-                                            const usuarioSelecionado = usuarios.find(u => u.nome === e.target.value);
-                                            if (usuarioSelecionado) setUsuarioAtual(usuarioSelecionado);
-                                        }}
-                                        className="border p-2 rounded"
-                                    >
-                                        {usuarios.map(u => (
-                                            <option key={u.nome} value={u.nome}>{u.nome}</option>
-                                        ))}
-                                    </select>
-                                    <img
-                                        src={usuarioAtual.avatar}
-                                        alt={usuarioAtual.nome}
-                                        className="w-8 h-8 rounded-full ml-2"
-                                    />
-                                </div>
-
+                    
                                 {/* Cabeçalho do chat */}
                                 <div className="flex items-center gap-3 p-6 border-b bg-gray-50">
                                    
@@ -140,7 +163,19 @@ export default function MensagensPage() {
                                 </div>
 
                                 <div className="flex-1 flex flex-col overflow-y-auto h-full">
-                                    <Chat contato={contatoAtivo} usuarioLogado={usuarioAtual} />
+                                <Chat
+                                    conversaId={contatoAtivo.idConversa}
+                                    contato={{
+                                        id: contatoAtivo.idUser,
+                                        nome: contatoAtivo.nome,
+                                        avatar: contatoAtivo.avatar,
+                                    }}
+                                    usuarioLogado={{
+                                        id: usuarioLogadoId,
+                                        nome: usuarioAtual.nome,
+                                        avatar: usuarioAtual.avatar,
+                                    }}
+                                />
                                 </div>
                             </div>
 

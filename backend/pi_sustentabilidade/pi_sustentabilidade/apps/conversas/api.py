@@ -4,6 +4,7 @@ from .models import Conversa
 from .schemas import ConversaSchema, ConversaCreateSchema, ConversaUpdateSchema
 from ninja import Router
 from ninja.errors import HttpError
+from pi_sustentabilidade.apps.users.models import Users 
 
 router = Router()
 
@@ -11,24 +12,36 @@ router = Router()
 @router.post("/create_conversa", response=ConversaSchema)
 def create_conversa(request, payload: ConversaCreateSchema):
     try:
-        # Verifica se os usuários são diferentes
         if payload.id_usuario1 == payload.id_usuario2:
             raise HttpError(400, "Os usuários devem ser diferentes")
-        
-        # Verifica se já existe conversa entre esses usuários (em qualquer ordem)
+
         conversa_existente = Conversa.objects.filter(
             Q(id_usuario1_id=payload.id_usuario1, id_usuario2_id=payload.id_usuario2) |
             Q(id_usuario1_id=payload.id_usuario2, id_usuario2_id=payload.id_usuario1)
-        ).first()
-        
+        ).select_related("id_usuario1", "id_usuario2").first()
+
         if conversa_existente:
             raise HttpError(409, "Já existe uma conversa entre esses usuários")
-        
+
+        u1 = Users.objects.get(id=payload.id_usuario1)
+        u2 = Users.objects.get(id=payload.id_usuario2)
+
         conversa = Conversa.objects.create(
-            id_usuario1_id=payload.id_usuario1,
-            id_usuario2_id=payload.id_usuario2
+            id_usuario1=u1,
+            id_usuario2=u2,
         )
-        return conversa
+
+        return ConversaSchema(
+            id=conversa.id,
+            id_usuario1=conversa.id_usuario1_id,
+            usuario1_nome=u1.name,
+            usuario1_image_url=u1.image_url,
+            id_usuario2=conversa.id_usuario2_id,
+            usuario2_nome=u2.name,
+            usuario2_image_url=u2.image_url,
+            data_criacao=conversa.data_criacao,
+            data_atualizacao=conversa.data_atualizacao,
+        )
     except HttpError:
         raise
     except Exception as e:
@@ -37,19 +50,60 @@ def create_conversa(request, payload: ConversaCreateSchema):
 # READ - List all
 @router.get("/get_conversas", response=list[ConversaSchema])
 def list_conversas(request):
-    return Conversa.objects.all()
+    conversas = Conversa.objects.select_related("id_usuario1", "id_usuario2").all()
+    return [
+        ConversaSchema(
+            id=c.id,
+            id_usuario1=c.id_usuario1_id,
+            usuario1_nome=c.id_usuario1.name,
+            usuario1_image_url=c.id_usuario1.image_url,
+            id_usuario2=c.id_usuario2_id,
+            usuario2_nome=c.id_usuario2.name,
+            usuario2_image_url=c.id_usuario2.image_url,
+            data_criacao=c.data_criacao,
+            data_atualizacao=c.data_atualizacao,
+        )
+        for c in conversas
+    ]
 
 # READ - Get by ID
 @router.get("/{conversa_id}", response=ConversaSchema)
 def get_conversa_by_id(request, conversa_id: int):
-    return get_object_or_404(Conversa, id=conversa_id)
+    c = get_object_or_404(Conversa.objects.select_related("id_usuario1", "id_usuario2"), id=conversa_id)
+    return ConversaSchema(
+        id=c.id,
+        id_usuario1=c.id_usuario1_id,
+        usuario1_nome=c.id_usuario1.name,
+        usuario1_image_url=c.id_usuario1.image_url,
+        id_usuario2=c.id_usuario2_id,
+        usuario2_nome=c.id_usuario2.name,
+        usuario2_image_url=c.id_usuario2.image_url,
+        data_criacao=c.data_criacao,
+        data_atualizacao=c.data_atualizacao,
+    )
+
 
 # READ - Get conversas by user
 @router.get("/user/{user_id}/conversas", response=list[ConversaSchema])
 def get_conversas_by_user(request, user_id: int):
-    return Conversa.objects.filter(
+    conversas = Conversa.objects.select_related("id_usuario1", "id_usuario2").filter(
         Q(id_usuario1_id=user_id) | Q(id_usuario2_id=user_id)
     )
+    return [
+        ConversaSchema(
+            id=c.id,
+            id_usuario1=c.id_usuario1_id,
+            usuario1_nome=c.id_usuario1.name,
+            usuario1_image_url=c.id_usuario1.image_url,
+            id_usuario2=c.id_usuario2_id,
+            usuario2_nome=c.id_usuario2.name,
+            usuario2_image_url=c.id_usuario2.image_url,
+            data_criacao=c.data_criacao,
+            data_atualizacao=c.data_atualizacao,
+        )
+        for c in conversas
+    ]
+
 
 # UPDATE
 @router.put("/{conversa_id}", response=ConversaSchema)
