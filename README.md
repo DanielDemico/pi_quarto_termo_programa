@@ -1,5 +1,6 @@
 # Campo Conectado - PI Quarto Termo
-## Integrantes: Daniel, Danielli, Eduardo, Matheus Betelli e Sabrina.
+## Integrantes: Daniel, Danielli, Eduardo, José Gabriel, Matheus Betelli e Sabrina.
+## Docente: Professora Doutora: Luciene Cristina Alves Rinaldi
 
 ## Estrutura
 
