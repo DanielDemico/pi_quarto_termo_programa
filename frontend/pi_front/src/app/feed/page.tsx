@@ -1,11 +1,12 @@
 "use client";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { useEffect, useState } from "react";
-import { apiPosts, apiImagensPosts, PostApi } from "@/util/api";
+import { apiPosts, apiImagensPosts, PostApi } from "@/app/services/apiMen";
 import PostCard from "@/components/Post";
 import BottomNav from "@/components/ui/BottomNav";
 import CreatePost from "@/components/createPost";
 import HeaderLogo from "@/components/ui/HeaderLogo";
+import { getLoggedUser } from "@/util/auth"; 
 
 type NovoPost = { imagem: string; texto: string };
 type Post = {
@@ -54,29 +55,42 @@ export default function Page() {
   }, []);
 
   async function adicionarPost(novo: NovoPost) {
+    const user = getLoggedUser();
+    console.log("USER DEBUG:", user);
+    console.log("BODY DEBUG:", {
+      id_usuario: user?.user_id,
+      titulo: novo.texto.slice(0, 50) || "Post",
+      conteudo: novo.texto,
+    });
+  
+    if (!user) {
+      alert("Você precisa estar logado para publicar.");
+      return;
+    }
+  
     if (!novo.imagem) {
       alert("Você precisa adicionar uma foto para publicar!");
       return;
     }
-
+  
     try {
       const createdPost = await apiPosts.create({
-        id_usuario: 1, // TODO: trocar pelo usuário logado
+        id_usuario: user.user_id,
         titulo: novo.texto.slice(0, 50) || "Post",
         conteudo: novo.texto,
       });
-
+  
       const createdImagem = await apiImagensPosts.create({
         id_post: createdPost.id,
-        url_imagem: novo.imagem, // base64 vindo do CreatePost
+        url_imagem: novo.imagem,
       });
-
-      await carregarPosts(); 
+  
+      await carregarPosts?.();
     } catch (err) {
       console.error("Erro ao criar post com imagem", err);
-      alert("Erro ao publicar post.");
     }
   }
+  
 
   return (
     <>

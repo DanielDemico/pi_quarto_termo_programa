@@ -1,11 +1,20 @@
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
-const axios = require("axios"); // ⬅
+const axios = require("axios"); 
+
+require("dotenv").config();
+
+const FRONT_ORIGIN = process.env.FRONT_ORIGIN || "http://localhost:3000";
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, { cors: { origin: "*" } });
+const io = socketio(server, {
+  cors: {
+    origin: FRONT_ORIGIN, // URL do seu frontend
+    methods: ["GET", "POST"],
+  },
+});
 
 // URL do backend Django dentro do docker-compose
 const DJANGO_BASE_URL = "http://backend:8000/api";

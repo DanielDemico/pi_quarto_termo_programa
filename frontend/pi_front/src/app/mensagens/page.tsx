@@ -5,7 +5,9 @@ import BottomNav from "@/components/ui/BottomNav";
 import HeaderLogo from "@/components/ui/HeaderLogo";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { useEffect, useState } from "react";
-import { apiPosts, apiImagensPosts, PostApi, apiConversas } from "@/util/api";
+import { apiPosts, apiImagensPosts, PostApi, apiConversas } from "@/app/services/apiMen";
+import { getLoggedUser } from "@/util/auth";
+
 
 type Contato = { idConversa: number; idUser: number; nome: string; avatar: string };
 
@@ -25,12 +27,12 @@ export default function MensagensPage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [termoBusca, setTermoBusca] = useState("");
     const [modalAberto, setModalAberto] = useState(false);
-    const usuarioLogadoId = 1
-    const usuarios = [
-        { nome: "henrylucas", avatar: "/avatars/henry.png" },
-        { nome: "luanmatheus", avatar: "/avatars/luan.png" },
-      ];
-    const [usuarioAtual, setUsuarioAtual] = useState(usuarios[0]);
+    const logged = getLoggedUser();
+    const usuarioLogadoId = logged?.user_id ?? 0;
+    const usuarioAtual = {
+        nome: logged?.name ?? "Você",
+        avatar: logged?.image_url ?? "/icons/Default.png"
+      };
     const [contatoAtivo, setContatoAtivo] = useState<Contato | null>(null);
     
     const contatosFiltrados = contatos.filter(contato =>
@@ -38,14 +40,19 @@ export default function MensagensPage() {
     );
 
     async function adicionarPost(novo: NovoPost) {
-        if (!novo.imagem) {
-          alert("Você precisa adicionar uma foto para publicar!");
-          return;
+        const user = getLoggedUser();
+        if (!user) {
+            alert("Você precisa estar logado para publicar.");
+            return;
         }
+        if (!novo.imagem) {
+            alert("Você precisa adicionar uma foto para publicar!");
+            return;
+          }
     
         try {
           const createdPost = await apiPosts.create({
-            id_usuario: 1, // TODO: trocar pelo usuário logado
+            id_usuario: user.user_id, // TODO: trocar pelo usuário logado
             titulo: novo.texto.slice(0, 50) || "Post",
             conteudo: novo.texto,
           });

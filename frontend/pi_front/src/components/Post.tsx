@@ -1,8 +1,9 @@
 'use client';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { apiComentarios } from "@/util/api";
-import { apiConversas } from "@/util/api";
+import { apiComentarios } from "@/app/services/apiMen";
+import { apiConversas } from "@/app/services/apiMen";
+import { getLoggedUser } from "@/util/auth";
 
 
 type PostProps = {
@@ -40,8 +41,10 @@ export default function PostCard({
     const [comentariosAbertos, setComentariosAbertos] = useState(false);
     const [comentarios, setComentarios] = useState<Comentario[]>([]);
     const [novoComentario, setNovoComentario] = useState("");
-    const router = useRouter();
-    const usuarioLogadoId = 1;
+    const logged = getLoggedUser();
+    const usuarioLogadoId = logged?.user_id ?? 0;
+    const router = useRouter(); 
+
 
     useEffect(() => {
         async function carregarComentarios() {
@@ -65,11 +68,18 @@ export default function PostCard({
 
     async function adicionarComentario() {
         if (!novoComentario.trim()) return;
+
+        const logged = getLoggedUser();
+        if (!logged) {
+          alert("Você precisa estar logado para comentar.");
+          router.push("/login"); 
+          return;
+        }
     
         try {
           const novo = await apiComentarios.create({
             id_post: id,
-            id_usuario: 1, // TODO: id do usuário logado
+            id_usuario: logged.user_id, 
             conteudo: novoComentario,
           });
     
@@ -88,9 +98,17 @@ export default function PostCard({
         }
       }
       async function iniciarConversa() {
+
+        const logged = getLoggedUser();
+        if (!logged) {
+          alert("Você precisa estar logado para enviar mensagens.");
+          router.push("/login");
+          return;
+        }
+      
         try {
           const conversa = await apiConversas.create({
-            id_usuario1: usuarioLogadoId,
+            id_usuario1: logged.user_id,
             id_usuario2: idUsuario,
           });
           router.push(

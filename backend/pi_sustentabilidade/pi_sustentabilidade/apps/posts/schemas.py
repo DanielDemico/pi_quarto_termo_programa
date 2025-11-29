@@ -1,12 +1,13 @@
 from ninja import Schema
 from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 class PostSchema(Schema):
     id: int
     id_usuario: int
     usuario_nome: str
-    usuario_image_url: str
+    usuario_image_url: Optional[str] = None
     titulo: str
     conteudo: str
     data_criacao: datetime

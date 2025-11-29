@@ -1,5 +1,4 @@
-const API_BASE_URL = "http://localhost:8000/api";
-
+const API_BASE_URL_MENSAGEM = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
 export type PostApi = {
     id: number;
@@ -49,13 +48,14 @@ export type MensagemDiretaApi = {
 
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${url}`, {
+  const res = await fetch(`${API_BASE_URL_MENSAGEM}${url}`, {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
 
   if (!res.ok) {
     const text = await res.text();
+    console.error("ERRO BACKEND:", res.status, text);
     throw new Error(`Erro ${res.status}: ${text}`);
   }
 

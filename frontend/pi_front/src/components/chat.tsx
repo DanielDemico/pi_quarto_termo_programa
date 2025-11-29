@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import socket from "../util/socket";
-import { apiMensagensDiretas } from "@/util/api";
+import { apiMensagensDiretas } from "@/app/services/apiMen";
 
 type ChatProps = {
   conversaId: number;
